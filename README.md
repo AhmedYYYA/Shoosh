@@ -1,39 +1,72 @@
 # Shoosh — An Orbit of Experiences
 
-Shoosh 2027 is a bilingual editorial experience website built around the approved Shoosh identity and the account’s broader story: **Taste · Places · Escape · Culture · Moments**.
+Shoosh 2027 is a bilingual editorial journal built around the approved Shoosh identity and the account's broader point of view: **Taste · Places · Escape · Culture · Moments**.
+
+## Product direction
+
+This is not an Instagram-grid clone and not a restaurant directory. Each supplied Shoosh post becomes a story that preserves:
+
+- the actual place / experience
+- Shoosh's qualitative observation
+- reservation guidance recorded in the post
+- the exact dishes or items tried where supplied
+- the prices recorded at the time of the visit
+- city, area, year, cuisine/type and mood metadata
+
+The journal does **not** invent numerical ratings or change a mixed/negative observation into a positive recommendation.
+
+## Approved identity
+
+- **Shoosh Blue:** `#112B68`
+- **Shoosh Gold:** `#D0962E`
+- **Pure White:** `#FFFFFF`
+- Core elements: Saturn, orbit, Shoosh signature, wave, gold star
+- Character: Minimal · Sophisticated · Fluid · Personal · Celestial
+
+The primary artwork is used as supplied; the site does not redraw or substitute the Shoosh lettering.
 
 ## Architecture
 
-- `index.html` — responsive front-end experience using semantic HTML, CSS and vanilla JavaScript.
-- `data/posts.json` — structured content/data layer used as the lightweight static backend for GitHub Pages.
-- Search, city/category filters and experience-detail modal are data-driven from the JSON archive.
-- Arabic/English UI switching is built into the front-end.
+```text
+/
+├── index.html                 # Editorial homepage
+├── journal/index.html         # Searchable/filterable archive
+├── story/index.html           # Dynamic individual story renderer
+├── about/index.html           # Identity + editorial principles
+├── data/posts.json            # Canonical structured content layer
+├── assets/
+│   ├── css/main.css           # Design system / responsive layout
+│   └── js/
+│       ├── app.js             # Data, language, journal + story rendering
+│       ├── media.js           # Approved source-media hydration
+│       └── enhance.js         # Deep-link/localization refinements
+├── manifest.webmanifest
+├── robots.txt
+├── sitemap.xml
+├── 404.html
+└── .nojekyll
+```
 
-## Content model
+### Front end
 
-Each experience can store:
+Semantic HTML, responsive CSS and progressive JavaScript. The site is mobile-first, keyboard accessible, respects reduced-motion preferences and supports English/Arabic with RTL switching.
 
-- category
-- city / area
-- year / date
-- cuisine or experience type
-- bilingual editorial summary
-- reservation guidance
-- dishes and prices
-- moods / editorial tags
-- featured flag
+### Content / back-end layer
 
-The current archive retains the original website content and adds the 20 newly supplied posts, including detailed dining notes and non-food experiences such as Al Qudra Lake.
+For the present GitHub Pages deployment, `data/posts.json` is the canonical content API. It is intentionally static: there is no public database or server attack surface to maintain for a read-only editorial journal. The schema is already separable from the presentation layer, so it can later be replaced by a CMS/API (for example a managed PostgreSQL/Supabase or headless CMS) without redesigning the website.
 
-## Brand system
+### Media provenance
 
-- Shoosh Blue: `#112B68`
-- Shoosh Gold: `#D4A02A`
-- Core language: Saturn / orbit / wave / gold star / Shoosh signature
-- Story principle: **not one category — one point of view**
+Experience imagery and the approved marks are hydrated from the immutable Shoosh repository media archive created from the supplied source material. This avoids substituting generic stock imagery for Shoosh's own experience. Future third-party supporting images must be rights-cleared, official, or open-license and clearly treated as supporting editorial imagery.
+
+## Content status
+
+The current archive contains **29 structured experiences**, including the original journal material plus the 20 additional posts supplied during the 2027 rebuild.
 
 ## Deployment
 
-Designed for GitHub Pages from the `main` branch repository root.
+Designed for GitHub Pages from `main` / repository root:
 
-The static JSON layer can later be replaced by a CMS/API without redesigning the front-end.
+`https://ahmedyyya.github.io/Shoosh/`
+
+No build service or package manager is required for the public deployment.
