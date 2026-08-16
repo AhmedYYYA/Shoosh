@@ -1,0 +1,40 @@
+name: Validate Shoosh site
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate structured content and required files
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          root = pathlib.Path('.')
+          required = [
+              'index.html','journal/index.html','story/index.html','about/index.html',
+              'assets/css/main.css','assets/js/app.js','assets/js/media.js','data/posts.json'
+          ]
+          missing=[p for p in required if not (root/p).exists()]
+          if missing:
+              raise SystemExit('Missing required files: ' + ', '.join(missing))
+          posts=json.loads((root/'data/posts.json').read_text())
+          if len(posts) < 29:
+              raise SystemExit(f'Expected at least 29 experiences, found {len(posts)}')
+          slugs=[p.get('slug') for p in posts]
+          if len(slugs) != len(set(slugs)):
+              raise SystemExit('Duplicate slugs detected')
+          for p in posts:
+              for key in ('slug','title','category','city','summaryEn','summaryAr'):
+                  if not p.get(key): raise SystemExit(f"{p.get('slug')}: missing {key}")
+              for dish in p.get('dishes',[]):
+                  if not dish.get('name'): raise SystemExit(f"{p['slug']}: dish missing name")
+          print(f'Validated {len(posts)} Shoosh experiences.')
+          PY
