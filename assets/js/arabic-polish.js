@@ -14,6 +14,10 @@
   const REVERSE_MOOD = Object.fromEntries(Object.entries(MOOD).map(([k,v]) => [v,k]));
   const isAr = () => document.documentElement.lang === 'ar' || document.documentElement.dir === 'rtl';
 
+  function setText(node, value) {
+    if (node.nodeValue !== value) node.nodeValue = value;
+  }
+
   function polishText(root = document.body) {
     if (!root) return;
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
@@ -24,18 +28,21 @@
       const trimmed = value.trim();
       if (isAr() && WORLD[trimmed]) value = value.replace(trimmed, WORLD[trimmed]);
       else if (!isAr() && REVERSE_WORLD[trimmed]) value = value.replace(trimmed, REVERSE_WORLD[trimmed]);
-      node.nodeValue = value;
+      setText(node, value);
     }
 
     document.querySelectorAll('select[data-category] option').forEach(option => {
       if (!option.value) return;
-      option.textContent = isAr() ? (WORLD[option.value] || option.value) : option.value;
+      const next = isAr() ? (WORLD[option.value] || option.value) : option.value;
+      if (option.textContent !== next) option.textContent = next;
     });
 
     document.querySelectorAll('.tag').forEach(tag => {
       const value = tag.textContent.trim();
-      if (isAr() && MOOD[value]) tag.textContent = MOOD[value];
-      else if (!isAr() && REVERSE_MOOD[value]) tag.textContent = REVERSE_MOOD[value];
+      let next = value;
+      if (isAr() && MOOD[value]) next = MOOD[value];
+      else if (!isAr() && REVERSE_MOOD[value]) next = REVERSE_MOOD[value];
+      if (tag.textContent !== next) tag.textContent = next;
     });
   }
 
@@ -49,9 +56,12 @@
     });
   };
 
-  document.addEventListener('DOMContentLoaded', () => {
+  const start = () => {
     schedule();
     new MutationObserver(schedule).observe(document.body, {childList:true, subtree:true, characterData:true});
     new MutationObserver(schedule).observe(document.documentElement, {attributes:true, attributeFilter:['lang','dir']});
-  });
+  };
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, {once:true});
+  else start();
 })();
