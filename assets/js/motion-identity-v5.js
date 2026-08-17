@@ -1,4 +1,13 @@
 (() => {
+  const ROOT=location.pathname.includes('/Shoosh/')?'/Shoosh/':'/';
+  if(!document.querySelector('link[data-shoosh-v6]')){
+    const link=document.createElement('link');link.rel='stylesheet';link.href=`${ROOT}assets/css/editorial-fix-v6.css`;link.dataset.shooshV6='1';document.head.append(link);
+  }
+  if(!window.__shooshV6Loading){
+    window.__shooshV6Loading=true;
+    import(`${ROOT}assets/js/editorial-fix-v6.js`).catch(e=>console.warn('Shoosh v6 editorial layer failed to load',e));
+  }
+
   const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>[...r.querySelectorAll(s)];
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isAr=()=>document.documentElement.lang==='ar'||document.documentElement.dir==='rtl';
