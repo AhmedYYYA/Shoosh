@@ -1,0 +1,4 @@
+/* Final v5 motion precedence. Keeps legacy progressive effects from overriding the new motion identity. */
+.oa-feature .media{transform:scale(var(--image-scale,1.06)) translate3d(0,var(--image-y,0),0)!important}
+.oa-story-stage .oa-story-media .media{transform:scale(var(--story-scale,1.08)) translate3d(0,var(--story-y,0),0)!important}
+.oa-row{position:relative;overflow:hidden}.oa-row:before{content:attr(data-city);position:absolute;right:1vw;top:50%;transform:translateY(-50%);font-family:var(--display-en);font-size:clamp(5rem,12vw,11rem);line-height:1;color:rgba(17,43,104,.025);pointer-events:none;white-space:nowrap}.rtl .oa-row:before{right:auto;left:1vw;font-family:var(--display-ar)}
