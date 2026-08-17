@@ -3,6 +3,16 @@
   const SOURCE=`${ROOT}assets/js/destination-media.js`;
   let mediaPromise;
 
+  // Load user-approved local overrides after the public destination layer.
+  // This guarantees that an approved Shoosh-supplied image wins over external fallbacks.
+  if(!document.querySelector('script[data-shoosh-yesterday-approved]')){
+    const s=document.createElement('script');
+    s.src=`${ROOT}assets/js/yesterday-approved.js`;
+    s.dataset.shooshYesterdayApproved='1';
+    s.defer=true;
+    document.head.appendChild(s);
+  }
+
   function extractMedia(source){
     const marker='const MEDIA=';
     const start=source.indexOf(marker);
