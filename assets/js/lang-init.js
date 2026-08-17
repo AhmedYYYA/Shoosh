@@ -49,4 +49,11 @@
   } else {
     startNormalizer();
   }
+
+  // Load the Arabic terminology layer used by static and dynamically rendered content.
+  const ROOT = location.pathname.includes('/Shoosh/') ? '/Shoosh/' : '/';
+  const polish = document.createElement('script');
+  polish.src = `${ROOT}assets/js/arabic-polish.js`;
+  polish.defer = true;
+  document.head.appendChild(polish);
 })();
